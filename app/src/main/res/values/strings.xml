@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">CryptoApp</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="coin_list_title">Ranking List</string>
+    <string name="crypto_list_crypto_abbreviation">ETH</string>
+    <string name="crypto_list_crypto_name">Ethereum</string>
+    <string name="crypto_price">$%s</string>
+    <string name="crypto_change_rate">%s</string>
 </resources>
