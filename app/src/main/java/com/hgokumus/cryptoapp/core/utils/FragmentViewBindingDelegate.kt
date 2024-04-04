@@ -1,4 +1,4 @@
-package com.hgokumus.cryptoapp.utils
+package com.hgokumus.cryptoapp.core.utils
 
 import android.view.View
 import androidx.fragment.app.Fragment

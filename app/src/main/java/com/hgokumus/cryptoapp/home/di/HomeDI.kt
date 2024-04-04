@@ -1,6 +1,6 @@
 package com.hgokumus.cryptoapp.home.di
 
-import com.hgokumus.cryptoapp.network.CryptoService
+import com.hgokumus.cryptoapp.network.service.CryptoService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -15,7 +15,7 @@ class HomeDI {
                 interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
                 val client: OkHttpClient = OkHttpClient.Builder().addInterceptor(interceptor).build()
                 val retrofit = Retrofit.Builder()
-                    .baseUrl("")
+                    .baseUrl("https://api.coinranking.com/")
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
