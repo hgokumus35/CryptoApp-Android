@@ -4,6 +4,7 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 import com.hgokumus.cryptoapp.core.extensions.Constants.CRYPTO_PRICE_FORMAT
+import java.text.SimpleDateFormat
 
 fun String.formatNumber(pattern: String) : String {
     val numberFormat = NumberFormat.getNumberInstance(Locale("tr", "TR")) as DecimalFormat
@@ -19,4 +20,10 @@ fun formatChangeAndPrice(change: Double, price: Double): String {
     val formattedPrice = "+$$formattedResult"
         .takeIf { result >= 0 }.orElse { "-$$formattedResult" }
     return "$formattedChange%($formattedPrice)"
+}
+
+fun timestampToDateString(timestamp: Long): String {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    val date = Date(timestamp * 1000)
+    return dateFormat.format(date)
 }

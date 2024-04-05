@@ -3,7 +3,8 @@ package com.hgokumus.cryptoapp.home
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.hgokumus.cryptoapp.R
-import com.hgokumus.cryptoapp.cryptoList.ui.CryptoListFragment
+import com.hgokumus.cryptoapp.crpyto.cryptoDetail.ui.CryptoDetailFragment
+import com.hgokumus.cryptoapp.crpyto.cryptoList.ui.CryptoListFragment
 
 class HomeActivity : AppCompatActivity() {
 

@@ -5,4 +5,7 @@
     <string name="crypto_list_crypto_name">Ethereum</string>
     <string name="crypto_price">$%s</string>
     <string name="crypto_change_rate">%s</string>
+    <string name="crypto_detail_current_price_text">CURRENT PRICE</string>
+    <string name="crypto_detail_daily_high_price">High: %s</string>
+    <string name="crypto_detail_daily_low_price">Low: %s</string>
 </resources>

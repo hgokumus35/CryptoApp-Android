@@ -1,4 +1,4 @@
-package com.hgokumus.cryptoapp.cryptoList.repository
+package com.hgokumus.cryptoapp.crpyto.cryptoList.repository
 
 import com.hgokumus.cryptoapp.core.extensions.Constants
 import com.hgokumus.cryptoapp.network.response.CryptoListResponse

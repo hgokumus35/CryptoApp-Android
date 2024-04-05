@@ -1,4 +1,4 @@
-package com.hgokumus.cryptoapp.cryptoList.ui
+package com.hgokumus.cryptoapp.crpyto.cryptoList.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,21 +8,35 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hgokumus.cryptoapp.R
+import com.hgokumus.cryptoapp.core.extensions.navigateToFragment
 import com.hgokumus.cryptoapp.core.utils.Resource
 import com.hgokumus.cryptoapp.core.utils.viewBinding
-import com.hgokumus.cryptoapp.cryptoList.viewmodel.CryptoListViewModel
+import com.hgokumus.cryptoapp.crpyto.cryptoDetail.ui.CryptoDetailFragment
+import com.hgokumus.cryptoapp.crpyto.cryptoList.viewmodel.CryptoListViewModel
 import com.hgokumus.cryptoapp.databinding.FragmentCryptoListBinding
 import org.koin.android.ext.android.inject
 
 class CryptoListFragment : Fragment() {
 
     companion object {
+        const val CRYPTO_LIST_FRAGMENT_TAG = "CRYPTO_LIST_FRAGMENT"
         fun newInstance() = CryptoListFragment()
     }
 
     private val binding by viewBinding(FragmentCryptoListBinding::bind)
     private val cryptoListViewModel by inject<CryptoListViewModel>()
-    private val cryptoListAdapter by lazy(LazyThreadSafetyMode.NONE) { CryptoListAdapter() }
+    private val cryptoListAdapter by lazy(LazyThreadSafetyMode.NONE) {
+        CryptoListAdapter(
+            onRowClick = { uuid ->
+                navigateToFragment(
+                    requireActivity(),
+                    CryptoDetailFragment.newInstance(uuid),
+                    R.id.homeContainer,
+                    CRYPTO_LIST_FRAGMENT_TAG
+                )
+            }
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
