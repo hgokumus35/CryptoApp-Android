@@ -1,11 +1,11 @@
-package com.hgokumus.cryptoapp.cryptoList.viewmodel
+package com.hgokumus.cryptoapp.crpyto.cryptoList.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hgokumus.cryptoapp.core.extensions.orElse
-import com.hgokumus.cryptoapp.cryptoList.repository.CryptoListRepository
+import com.hgokumus.cryptoapp.crpyto.cryptoList.repository.CryptoListRepository
 import com.hgokumus.cryptoapp.network.response.CryptoListResponse
 import com.hgokumus.cryptoapp.core.utils.Resource
 import kotlinx.coroutines.launch

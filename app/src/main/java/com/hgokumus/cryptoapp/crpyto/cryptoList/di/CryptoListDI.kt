@@ -1,8 +1,8 @@
-package com.hgokumus.cryptoapp.cryptoList.di
+package com.hgokumus.cryptoapp.crpyto.cryptoList.di
 
-import com.hgokumus.cryptoapp.cryptoList.repository.CryptoListRepository
-import com.hgokumus.cryptoapp.cryptoList.repository.CryptoListRepositoryImpl
-import com.hgokumus.cryptoapp.cryptoList.viewmodel.CryptoListViewModel
+import com.hgokumus.cryptoapp.crpyto.cryptoList.repository.CryptoListRepository
+import com.hgokumus.cryptoapp.crpyto.cryptoList.repository.CryptoListRepositoryImpl
+import com.hgokumus.cryptoapp.crpyto.cryptoList.viewmodel.CryptoListViewModel
 import com.hgokumus.cryptoapp.network.service.CryptoService
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module

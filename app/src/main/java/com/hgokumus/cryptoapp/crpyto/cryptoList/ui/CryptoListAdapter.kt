@@ -1,4 +1,4 @@
-package com.hgokumus.cryptoapp.cryptoList.ui
+package com.hgokumus.cryptoapp.crpyto.cryptoList.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,7 +13,9 @@ import com.hgokumus.cryptoapp.core.extensions.orElse
 import com.hgokumus.cryptoapp.databinding.CryptoListItemBinding
 import com.hgokumus.cryptoapp.network.response.Crypto
 
-class CryptoListAdapter : ListAdapter<Crypto, CryptoListAdapter.CryptoListViewHolder>(DIFF_CALLBACK) {
+class CryptoListAdapter(
+    private val onRowClick: (id: String) -> Unit
+) : ListAdapter<Crypto, CryptoListAdapter.CryptoListViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Crypto>() {
@@ -32,7 +34,13 @@ class CryptoListAdapter : ListAdapter<Crypto, CryptoListAdapter.CryptoListViewHo
     internal fun setItems(cryptoListResponse: List<Crypto>?) = submitList(cryptoListResponse?.toMutableList())
 
     inner class CryptoListViewHolder(private val binding: CryptoListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(cryptoListResponse: Crypto) = with(binding) {
+            root.setOnClickListener {
+                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                    cryptoListResponse.uuid?.let { uuid -> onRowClick.invoke(uuid) }
+                }
+            }
             cryptoAbbreviation.text = cryptoListResponse.symbol
             cryptoName.text = cryptoListResponse.name
             cryptoPrice.text = String.format(

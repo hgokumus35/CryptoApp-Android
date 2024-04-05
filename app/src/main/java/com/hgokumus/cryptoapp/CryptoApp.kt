@@ -1,7 +1,8 @@
 package com.hgokumus.cryptoapp
 
 import android.app.Application
-import com.hgokumus.cryptoapp.cryptoList.di.CryptoListDI
+import com.hgokumus.cryptoapp.crpyto.cryptoDetail.di.CryptoDetailDI
+import com.hgokumus.cryptoapp.crpyto.cryptoList.di.CryptoListDI
 import com.hgokumus.cryptoapp.home.di.HomeDI
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -17,7 +18,8 @@ class CryptoApp : Application() {
             modules(
                 listOf(
                     HomeDI.module,
-                    CryptoListDI.module
+                    CryptoListDI.module,
+                    CryptoDetailDI.module
                 )
             )
         }
