@@ -5,3 +5,11 @@ object Constants {
     const val EMPTY_STR = ""
     const val CRYPTO_PRICE_FORMAT = "#,##0.00"
 }
+
+enum class FilterTypesEnum(val orderBy: String) {
+    MARKET_CAP("marketCap"),
+    PRICE("price"),
+    CHANGE("change"),
+    DAILY_VOLUME("24hVolume"),
+    LISTED_AT("listedAt")
+}
