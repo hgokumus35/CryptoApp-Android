@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -49,8 +51,9 @@ class CryptoListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         cryptoListViewModel.getCryptoList()
-        setObservers()
         setAdapters()
+        setObservers()
+        setListeners()
     }
 
     private fun setAdapters() {
@@ -59,6 +62,22 @@ class CryptoListFragment : Fragment() {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             itemAnimator = null
         }
+        setSpinnerAdapter()
+    }
+
+    private fun setListeners() {
+        binding.filterSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                cryptoListViewModel.getCryptoList(cryptoListViewModel.filterTypes[position])
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
     }
 
     private fun setObservers() {
@@ -66,8 +85,20 @@ class CryptoListFragment : Fragment() {
             if (response is Resource.Error) {
                 println("ERROR")
             } else {
+                binding.cryptoListRecyclerView.smoothScrollToPosition(0)
                 cryptoListAdapter.setItems(response?.data?.data?.coins)
+                cryptoListAdapter.notifyDataSetChanged()
             }
         }
+    }
+
+    private fun setSpinnerAdapter() {
+        val spinnerAdapter = ArrayAdapter(
+            requireContext(),
+            R.layout.custom_spinner_layout,
+            cryptoListViewModel.filterTypes
+        )
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.filterSpinner.adapter = spinnerAdapter
     }
 }

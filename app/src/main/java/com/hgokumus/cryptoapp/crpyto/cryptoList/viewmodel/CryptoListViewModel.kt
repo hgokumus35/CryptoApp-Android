@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hgokumus.cryptoapp.core.extensions.FilterTypesEnum
 import com.hgokumus.cryptoapp.core.extensions.orElse
 import com.hgokumus.cryptoapp.crpyto.cryptoList.repository.CryptoListRepository
 import com.hgokumus.cryptoapp.network.response.CryptoListResponse
@@ -17,8 +18,16 @@ class CryptoListViewModel(
     private val _getCryptoListEvent = MutableLiveData<Resource<CryptoListResponse>>()
     val getCryptoListEvent: LiveData<Resource<CryptoListResponse>> = _getCryptoListEvent
 
-    fun getCryptoList() = viewModelScope.launch {
-        val response = repository.getCryptoList()
+    val filterTypes = arrayOf(
+        FilterTypesEnum.MARKET_CAP.orderBy,
+        FilterTypesEnum.PRICE.orderBy,
+        FilterTypesEnum.DAILY_VOLUME.orderBy,
+        FilterTypesEnum.CHANGE.orderBy,
+        FilterTypesEnum.LISTED_AT.orderBy
+    )
+
+    fun getCryptoList(orderBy: String = "marketCap") = viewModelScope.launch {
+        val response = repository.getCryptoList(orderBy)
         response.body()?.let { responseBody ->
             _getCryptoListEvent.value = Resource.Success(responseBody)
                 .takeIf { response.isSuccessful }

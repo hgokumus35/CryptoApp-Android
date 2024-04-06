@@ -5,6 +5,7 @@ import java.text.NumberFormat
 import java.util.*
 import com.hgokumus.cryptoapp.core.extensions.Constants.CRYPTO_PRICE_FORMAT
 import java.text.SimpleDateFormat
+import kotlin.math.abs
 
 fun String.formatNumber(pattern: String) : String {
     val numberFormat = NumberFormat.getNumberInstance(Locale("tr", "TR")) as DecimalFormat
@@ -14,7 +15,7 @@ fun String.formatNumber(pattern: String) : String {
 
 fun formatChangeAndPrice(change: Double, price: Double): String {
     val result = change * price / 100
-    val formattedResult = DecimalFormat(CRYPTO_PRICE_FORMAT).format(result)
+    val formattedResult = DecimalFormat(CRYPTO_PRICE_FORMAT).format(abs(result))
     val formattedChange = "+${change.toString().formatNumber(CRYPTO_PRICE_FORMAT)}"
         .takeIf { change >= 0 }.orElse { change.toString().formatNumber(CRYPTO_PRICE_FORMAT) }
     val formattedPrice = "+$$formattedResult"
