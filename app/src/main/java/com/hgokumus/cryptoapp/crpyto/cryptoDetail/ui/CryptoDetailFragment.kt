@@ -87,6 +87,10 @@ class CryptoDetailFragment : Fragment() {
         with(binding) {
             appbar.cryptoAbbreviationDetail.text = cryptoDetail.symbol
             appbar.cryptoNameDetail.text = cryptoDetail.name
+            priceLayout.cryptoRank.text = String.format(
+                requireContext().getString(R.string.crypto_detail_rank),
+                cryptoDetail.rank
+            )
             priceLayout.cryptoPrice.text = String.format(
                 requireContext().getString(R.string.crypto_price),
                 cryptoDetail.price?.formatNumber(CRYPTO_PRICE_FORMAT)
@@ -115,11 +119,13 @@ class CryptoDetailFragment : Fragment() {
         chartDataSet.lineWidth = 2f
 
         val lineData = LineData(chartDataSet)
-        binding.cryptoChart.data = lineData
-        binding.cryptoChart.description.isEnabled = false
-        binding.cryptoChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-        binding.cryptoChart.axisLeft.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
-        binding.cryptoChart.axisRight.isEnabled = false
-        binding.cryptoChart.invalidate()
+        with(binding.cryptoChart) {
+            data = lineData
+            description.isEnabled = false
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            axisLeft.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
+            axisRight.isEnabled = false
+            invalidate()
+        }
     }
 }

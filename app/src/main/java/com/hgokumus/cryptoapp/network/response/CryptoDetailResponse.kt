@@ -25,5 +25,6 @@ data class CryptoDetail(
     val iconUrl: String?,
     val price: String?,
     val change: String?,
+    val rank: Int?,
     val sparkline: List<String>?
 ) : Parcelable

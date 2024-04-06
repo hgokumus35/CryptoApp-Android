@@ -13,6 +13,7 @@ import com.hgokumus.cryptoapp.network.request.PriceHistoryRequest
 import com.hgokumus.cryptoapp.network.response.CryptoDetailResponse
 import com.hgokumus.cryptoapp.network.response.History
 import com.hgokumus.cryptoapp.network.response.PriceHistoryResponse
+import com.hgokumus.cryptoapp.room.entity.FavoriteCryptoEntity
 import kotlinx.coroutines.launch
 
 class CryptoDetailViewModel(
@@ -24,6 +25,12 @@ class CryptoDetailViewModel(
 
     private val _getPriceHistoryEvent = MutableLiveData<Resource<PriceHistoryResponse>>()
     val getPriceHistoryEvent: LiveData<Resource<PriceHistoryResponse>> = _getPriceHistoryEvent
+
+    private val _addToFavoritesEvent = MutableLiveData<Boolean>()
+    val addToFavoritesEvent: LiveData<Boolean> = _addToFavoritesEvent
+
+    private val _removeFromFavoritesEvent = MutableLiveData<Boolean>()
+    val removeFromFavoritesEvent: LiveData<Boolean> = _removeFromFavoritesEvent
 
     var cryptoDetailUIVisibility = MutableLiveData(false)
 
@@ -47,6 +54,16 @@ class CryptoDetailViewModel(
                 .takeIf { response.isSuccessful }
                 .orElse { Resource.Error(response.message()) }
         }
+    }
+
+    fun addToFavorites(favoriteCrypto: FavoriteCryptoEntity) = viewModelScope.launch {
+        val isSuccessful = repository.addToFavorites(favoriteCrypto)
+        _addToFavoritesEvent.value = isSuccessful
+    }
+
+    fun removeFromFavorites(favoriteCrypto: FavoriteCryptoEntity) = viewModelScope.launch {
+        val isSuccessful = repository.removeFromFavorites(favoriteCrypto)
+        _removeFromFavoritesEvent.value = isSuccessful
     }
 
     fun cryptoChartUIModel(priceHistoryList: List<History>) : MutableList<Entry> {

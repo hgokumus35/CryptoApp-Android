@@ -75,7 +75,6 @@ class CryptoListFragment : Fragment() {
             ) {
                 cryptoListViewModel.getCryptoList(cryptoListViewModel.filterTypes[position])
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
@@ -85,7 +84,6 @@ class CryptoListFragment : Fragment() {
             if (response is Resource.Error) {
                 println("ERROR")
             } else {
-                binding.cryptoListRecyclerView.smoothScrollToPosition(0)
                 cryptoListAdapter.setItems(response?.data?.data?.coins)
                 cryptoListAdapter.notifyDataSetChanged()
             }
