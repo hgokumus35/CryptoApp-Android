@@ -13,7 +13,7 @@ data class CryptoListResponse(
 @Keep
 @Parcelize
 data class CryptoList(
-    val coins: List<Crypto>
+    val coins: MutableList<Crypto>
 ) : Parcelable
 
 @Keep

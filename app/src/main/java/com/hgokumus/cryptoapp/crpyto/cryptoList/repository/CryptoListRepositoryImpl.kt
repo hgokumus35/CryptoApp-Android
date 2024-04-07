@@ -13,8 +13,9 @@ class CryptoListRepositoryImpl(
 ) : CryptoListRepository {
     override suspend fun getAllFavorites(): List<FavoriteCryptoEntity> = cryptoDatabase.cryptoDao().getAllFavorites()
 
-    override suspend fun getCryptoList(orderBy: String): Response<CryptoListResponse> = cryptoService.getCryptoList(
+    override suspend fun getCryptoList(orderBy: String, offSet: Int): Response<CryptoListResponse> = cryptoService.getCryptoList(
         apiKey = API_KEY,
-        orderBy = orderBy
+        orderBy = orderBy,
+        offset = offSet
     )
 }

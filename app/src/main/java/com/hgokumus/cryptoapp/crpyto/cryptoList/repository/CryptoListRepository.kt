@@ -6,5 +6,5 @@ import retrofit2.Response
 
 interface CryptoListRepository {
     suspend fun getAllFavorites() : List<FavoriteCryptoEntity>
-    suspend fun getCryptoList(orderBy: String): Response<CryptoListResponse>
+    suspend fun getCryptoList(orderBy: String, offSet: Int): Response<CryptoListResponse>
 }

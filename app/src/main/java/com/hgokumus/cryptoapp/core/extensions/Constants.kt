@@ -4,6 +4,8 @@ object Constants {
     const val API_KEY = "coinranking908bd270a914301737a376500fe8983b6070f39242a4a505"
     const val EMPTY_STR = ""
     const val CRYPTO_PRICE_FORMAT = "#,##0.00"
+    const val ZERO_INT = 0
+    const val FIFTEEN_INT = 15
 }
 
 enum class FilterTypesEnum(val orderBy: String) {
