@@ -4,6 +4,7 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 import com.hgokumus.cryptoapp.core.extensions.Constants.CRYPTO_PRICE_FORMAT
+import com.hgokumus.cryptoapp.core.extensions.Constants.TIMESTAMP_TO_STRING_FORMAT
 import java.text.SimpleDateFormat
 import kotlin.math.abs
 
@@ -23,8 +24,12 @@ fun formatChangeAndPrice(change: Double, price: Double): String {
     return "$formattedChange%($formattedPrice)"
 }
 
-fun timestampToDateString(timestamp: Long): String {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-    val date = Date(timestamp * 1000)
-    return dateFormat.format(date)
+fun timestampToDateString(timestampList: List<Long>): List<String> {
+    val convertedList: MutableList<String> = mutableListOf()
+    timestampList.forEach { timeStamp ->
+        val dateFormat = SimpleDateFormat(TIMESTAMP_TO_STRING_FORMAT, Locale.getDefault())
+        val date = Date(timeStamp * 1000)
+        convertedList.add(dateFormat.format(date))
+    }
+    return convertedList
 }

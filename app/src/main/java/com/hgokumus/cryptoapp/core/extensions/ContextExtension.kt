@@ -11,7 +11,7 @@ fun Context.showSuccessDialog(@StringRes message: Int, action: Runnable? = null)
     with(dialogBuilder) {
         setTitle(R.string.crypto_dialog_success_title)
         setMessage(message)
-        setPositiveButton("OK") { dialogInterface: DialogInterface, _: Int ->
+        setPositiveButton(R.string.crypto_ok_text) { dialogInterface: DialogInterface, _: Int ->
             dialogInterface.dismiss()
             if (action.isNotNull()) action?.run()
         }
@@ -25,7 +25,7 @@ fun Context.showErrorDialog(@StringRes message: Int, action: Runnable? = null) {
     with(dialogBuilder) {
         setTitle(R.string.crypto_dialog_error_title)
         setMessage(message)
-        setPositiveButton("OK") { dialogInterface: DialogInterface, _: Int ->
+        setPositiveButton(R.string.crypto_ok_text) { dialogInterface: DialogInterface, _: Int ->
             dialogInterface.dismiss()
             if (action.isNotNull()) action?.run()
         }

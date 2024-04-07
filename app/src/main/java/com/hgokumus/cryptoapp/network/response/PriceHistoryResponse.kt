@@ -21,5 +21,5 @@ data class PriceHistory(
 @Parcelize
 data class History(
     val price: String?,
-    val timestamp: Int?
+    val timestamp: Long?
 ) : Parcelable

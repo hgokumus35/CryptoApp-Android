@@ -3,6 +3,7 @@
     <string name="coin_list_title">Ranking List</string>
     <string name="crypto_list_crypto_abbreviation">ETH</string>
     <string name="crypto_list_crypto_name">Ethereum</string>
+    <string name="crypto_ok_text">OK</string>
     <string name="crypto_price">$%s</string>
     <string name="crypto_change_rate">%s</string>
     <string name="crypto_detail_current_price_text">CURRENT PRICE</string>
@@ -13,10 +14,11 @@
     // Dialog Texts
     <string name="crypto_dialog_success_title">SUCCESS</string>
     <string name="crypto_dialog_error_title">ERROR</string>
+    <string name="crypto_dialog_error_message">An error occured. Please try again.</string>
     <string name="crypto_add_to_favorites_success_dialog_message">Successfully added to favorites.</string>
     <string name="crypto_add_to_favorites_error_dialog_message">An error occurred while adding to favorites. Please try again.</string>
     <string name="crypto_remove_from_favorites_success_dialog_message">Successfully removed from favorites.</string>
     <string name="crypto_remove_from_favorites_error_dialog_message">An error occurred while removing from favorites. Please try again.</string>
-    <string name="crypto_detail_add_favorites_button_text">FAVORİLERE EKLE</string>
-    <string name="crypto_detail_remove_from_favorites_button_text">FAVORİLERİMDEN KALDIR</string>
+    <string name="crypto_detail_add_favorites_button_text">ADD TO FAVORITES</string>
+    <string name="crypto_detail_remove_from_favorites_button_text">REMOVE FROM FAVORITES</string>
 </resources>
