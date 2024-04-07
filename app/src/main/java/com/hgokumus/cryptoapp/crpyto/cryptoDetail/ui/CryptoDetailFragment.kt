@@ -28,12 +28,16 @@ import org.koin.android.ext.android.inject
 class CryptoDetailFragment : Fragment() {
 
     companion object {
-        fun newInstance(uuid: String) = CryptoDetailFragment().apply {
+        fun newInstance(uuid: String, id: Long, isFavorite: Boolean) = CryptoDetailFragment().apply {
             this.uuid = uuid
+            this.id = id
+            this.isFavorite = isFavorite
         }
     }
 
     private var uuid: String = ""
+    private var id: Long = 0
+    private var isFavorite: Boolean = false
     private val binding by viewBinding(FragmentCryptoDetailBinding::bind)
     private val cryptoDetailViewModel by inject<CryptoDetailViewModel>()
 
@@ -60,7 +64,16 @@ class CryptoDetailFragment : Fragment() {
         binding.addToFavoritesButton.setOnClickListener {
             cryptoDetailViewModel.addToFavorites(
                 FavoriteCryptoEntity(
-                    id = 0,
+                    name = cryptoDetailViewModel.cryptoDetail?.name,
+                    iconUrl = cryptoDetailViewModel.cryptoDetail?.iconUrl,
+                    rank = cryptoDetailViewModel.cryptoDetail?.rank
+                )
+            )
+        }
+        binding.removeFromFavoritesButton.setOnClickListener {
+            cryptoDetailViewModel.removeFromFavorites(
+                FavoriteCryptoEntity(
+                    id = id,
                     name = cryptoDetailViewModel.cryptoDetail?.name,
                     iconUrl = cryptoDetailViewModel.cryptoDetail?.iconUrl,
                     rank = cryptoDetailViewModel.cryptoDetail?.rank
@@ -72,6 +85,10 @@ class CryptoDetailFragment : Fragment() {
     private fun setObservers() {
         cryptoDetailViewModel.cryptoDetailUIVisibility.observe(viewLifecycleOwner) {
             binding.cryptoDetailMainLayout.isVisible = it
+        }
+        cryptoDetailViewModel.addRemoveButtonVisibility.observe(viewLifecycleOwner) {
+            binding.addToFavoritesButton.isVisible = !it
+            binding.removeFromFavoritesButton.isVisible = it
         }
         cryptoDetailViewModel.getCryptoDetailEvent.observe(viewLifecycleOwner) { resource ->
             when (resource) {
@@ -95,13 +112,17 @@ class CryptoDetailFragment : Fragment() {
         }
         cryptoDetailViewModel.addToFavoritesEvent.observe(viewLifecycleOwner) { resource ->
             when (resource) {
-                true -> context?.showSuccessDialog(R.string.crypto_add_to_favorites_success_dialog_message)
+                true -> context?.showSuccessDialog(R.string.crypto_add_to_favorites_success_dialog_message) {
+                    cryptoDetailViewModel.setAddRemoveButtonVisibility(true)
+                }
                 false -> context?.showErrorDialog(R.string.crypto_add_to_favorites_error_dialog_message)
             }
         }
         cryptoDetailViewModel.removeFromFavoritesEvent.observe(viewLifecycleOwner) { resource ->
             when (resource) {
-                true -> context?.showSuccessDialog(R.string.crypto_remove_from_favorites_success_dialog_message)
+                true -> context?.showSuccessDialog(R.string.crypto_remove_from_favorites_success_dialog_message) {
+                    cryptoDetailViewModel.setAddRemoveButtonVisibility(false)
+                }
                 false -> context?.showErrorDialog(R.string.crypto_remove_from_favorites_error_dialog_message)
             }
         }
@@ -126,14 +147,15 @@ class CryptoDetailFragment : Fragment() {
                     cryptoDetail.price?.toDouble().orElse { 0.0 }
                 )
             )
-      /*      priceLayout.dailyHighPrice.text = String.format(
+            priceLayout.dailyHighPrice.text = String.format(
                 requireContext().getString(R.string.crypto_detail_daily_high_price),
                 cryptoDetail.sparkline?.maxOfOrNull { it.toDouble() }.toString().formatNumber(CRYPTO_PRICE_FORMAT)
             )
             priceLayout.dailyLowPrice.text = String.format(
                 requireContext().getString(R.string.crypto_detail_daily_low_price),
                 cryptoDetail.sparkline?.minOfOrNull { it.toDouble() }.toString().formatNumber(CRYPTO_PRICE_FORMAT)
-            ) */
+            )
+            cryptoDetailViewModel.setAddRemoveButtonVisibility(isFavorite)
         }
     }
 

@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity (tableName = "FavoriteCrypto")
 data class FavoriteCryptoEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "iconUrl") val iconUrl: String?,
     @ColumnInfo(name = "rank") val rank: Int?

@@ -17,4 +17,6 @@
     <string name="crypto_add_to_favorites_error_dialog_message">An error occurred while adding to favorites. Please try again.</string>
     <string name="crypto_remove_from_favorites_success_dialog_message">Successfully removed from favorites.</string>
     <string name="crypto_remove_from_favorites_error_dialog_message">An error occurred while removing from favorites. Please try again.</string>
+    <string name="crypto_detail_add_favorites_button_text">FAVORİLERE EKLE</string>
+    <string name="crypto_detail_remove_from_favorites_button_text">FAVORİLERİMDEN KALDIR</string>
 </resources>

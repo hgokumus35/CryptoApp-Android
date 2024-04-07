@@ -16,7 +16,7 @@ import com.hgokumus.cryptoapp.databinding.CryptoListItemBinding
 import com.hgokumus.cryptoapp.network.response.Crypto
 
 class CryptoListAdapter(
-    private val onRowClick: (id: String) -> Unit
+    private val onRowClick: (uuid: String, id: Long, isFavorite: Boolean) -> Unit
 ) : ListAdapter<Crypto, CryptoListAdapter.CryptoListViewHolder>(DIFF_CALLBACK) {
 
     companion object {
@@ -33,14 +33,16 @@ class CryptoListAdapter(
 
     override fun onBindViewHolder(holder: CryptoListViewHolder, position: Int) = holder.bind(getItem(position))
 
-    internal fun setItems(cryptoListResponse: List<Crypto>?) = submitList(cryptoListResponse?.toMutableList())
+    internal fun setItems(cryptoListResponse: List<Crypto>?) {
+        submitList(cryptoListResponse?.toMutableList())
+    }
 
     inner class CryptoListViewHolder(private val binding: CryptoListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(cryptoListResponse: Crypto) = with(binding) {
             root.setOnClickListener {
                 if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                    cryptoListResponse.uuid?.let { uuid -> onRowClick.invoke(uuid) }
+                    cryptoListResponse.uuid?.let { uuid -> onRowClick.invoke(uuid, cryptoListResponse.id, cryptoListResponse.isFavorite) }
                 }
             }
             cryptoImage.loadUrl(cryptoListResponse.iconUrl)

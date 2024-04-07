@@ -15,7 +15,7 @@ interface CryptoService {
     suspend fun getCryptoList(
         @Header("x-access-token") apiKey: String,
         @Query("offset") offset: Int? = null,
-        @Query("limit") limit: Int? = null,
+        @Query("limit") limit: Int = 15,
         @Query("orderBy") orderBy: String? = null,
     ) : Response<CryptoListResponse>
 

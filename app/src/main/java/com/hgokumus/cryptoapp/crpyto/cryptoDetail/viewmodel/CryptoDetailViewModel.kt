@@ -34,10 +34,15 @@ class CryptoDetailViewModel(
     val removeFromFavoritesEvent: LiveData<Boolean> = _removeFromFavoritesEvent
 
     var cryptoDetailUIVisibility = MutableLiveData(false)
+    var addRemoveButtonVisibility = MutableLiveData(false)
     var cryptoDetail: CryptoDetail? = null
 
     fun setCryptoDetailUIVisibility(visibility: Boolean) {
         cryptoDetailUIVisibility.value = visibility
+    }
+
+    fun setAddRemoveButtonVisibility(visibility: Boolean) {
+        addRemoveButtonVisibility.value = visibility
     }
 
     fun getCryptoDetail(request: CryptoDetailRequest) = viewModelScope.launch {

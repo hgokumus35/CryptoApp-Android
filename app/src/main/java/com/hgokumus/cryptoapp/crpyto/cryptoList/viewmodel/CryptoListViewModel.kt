@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hgokumus.cryptoapp.core.extensions.FilterTypesEnum
+import com.hgokumus.cryptoapp.core.extensions.isNull
 import com.hgokumus.cryptoapp.core.extensions.orElse
 import com.hgokumus.cryptoapp.crpyto.cryptoList.repository.CryptoListRepository
 import com.hgokumus.cryptoapp.network.response.CryptoListResponse
@@ -49,6 +50,7 @@ class CryptoListViewModel(
         val updatedList = cryptoList.toMutableList()
         updatedList.forEach { crypto ->
             crypto.isFavorite = favoritesList.any { it.name == crypto.name }
+            crypto.id = favoritesList.find { it.name == crypto.name }?.id.orElse { 0 }
         }
         return updatedList
     }
