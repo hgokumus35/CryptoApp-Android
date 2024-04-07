@@ -12,10 +12,8 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.hgokumus.cryptoapp.R
+import com.hgokumus.cryptoapp.core.extensions.*
 import com.hgokumus.cryptoapp.core.extensions.Constants.CRYPTO_PRICE_FORMAT
-import com.hgokumus.cryptoapp.core.extensions.formatChangeAndPrice
-import com.hgokumus.cryptoapp.core.extensions.formatNumber
-import com.hgokumus.cryptoapp.core.extensions.orElse
 import com.hgokumus.cryptoapp.core.utils.Resource
 import com.hgokumus.cryptoapp.core.utils.viewBinding
 import com.hgokumus.cryptoapp.crpyto.cryptoDetail.viewmodel.CryptoDetailViewModel
@@ -24,6 +22,7 @@ import com.hgokumus.cryptoapp.network.request.CryptoDetailRequest
 import com.hgokumus.cryptoapp.network.request.PriceHistoryRequest
 import com.hgokumus.cryptoapp.network.response.CryptoDetail
 import com.hgokumus.cryptoapp.network.response.PriceHistory
+import com.hgokumus.cryptoapp.room.entity.FavoriteCryptoEntity
 import org.koin.android.ext.android.inject
 
 class CryptoDetailFragment : Fragment() {
@@ -58,6 +57,16 @@ class CryptoDetailFragment : Fragment() {
         binding.appbar.backButton.setOnClickListener {
             activity?.onBackPressed()
         }
+        binding.addToFavoritesButton.setOnClickListener {
+            cryptoDetailViewModel.addToFavorites(
+                FavoriteCryptoEntity(
+                    id = 0,
+                    name = cryptoDetailViewModel.cryptoDetail?.name,
+                    iconUrl = cryptoDetailViewModel.cryptoDetail?.iconUrl,
+                    rank = cryptoDetailViewModel.cryptoDetail?.rank
+                )
+            )
+        }
     }
 
     private fun setObservers() {
@@ -68,7 +77,10 @@ class CryptoDetailFragment : Fragment() {
             when (resource) {
                 is Resource.Error -> println("ERROR")
                 is Resource.Success -> {
-                    resource.data?.data?.coin?.let { initializeUI(it) }
+                    resource.data?.data?.coin?.let {
+                        initializeUI(it)
+                        cryptoDetailViewModel.cryptoDetail = it
+                    }
                     cryptoDetailViewModel.setCryptoDetailUIVisibility(true)
                 }
                 else -> Unit
@@ -79,6 +91,18 @@ class CryptoDetailFragment : Fragment() {
                 is Resource.Error -> println("ERROR")
                 is Resource.Success -> resource.data?.data?.let { initCryptoChart(it) }
                 else -> Unit
+            }
+        }
+        cryptoDetailViewModel.addToFavoritesEvent.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                true -> context?.showSuccessDialog(R.string.crypto_add_to_favorites_success_dialog_message)
+                false -> context?.showErrorDialog(R.string.crypto_add_to_favorites_error_dialog_message)
+            }
+        }
+        cryptoDetailViewModel.removeFromFavoritesEvent.observe(viewLifecycleOwner) { resource ->
+            when (resource) {
+                true -> context?.showSuccessDialog(R.string.crypto_remove_from_favorites_success_dialog_message)
+                false -> context?.showErrorDialog(R.string.crypto_remove_from_favorites_error_dialog_message)
             }
         }
     }
@@ -102,14 +126,14 @@ class CryptoDetailFragment : Fragment() {
                     cryptoDetail.price?.toDouble().orElse { 0.0 }
                 )
             )
-            priceLayout.dailyHighPrice.text = String.format(
+      /*      priceLayout.dailyHighPrice.text = String.format(
                 requireContext().getString(R.string.crypto_detail_daily_high_price),
                 cryptoDetail.sparkline?.maxOfOrNull { it.toDouble() }.toString().formatNumber(CRYPTO_PRICE_FORMAT)
             )
             priceLayout.dailyLowPrice.text = String.format(
                 requireContext().getString(R.string.crypto_detail_daily_low_price),
                 cryptoDetail.sparkline?.minOfOrNull { it.toDouble() }.toString().formatNumber(CRYPTO_PRICE_FORMAT)
-            )
+            ) */
         }
     }
 

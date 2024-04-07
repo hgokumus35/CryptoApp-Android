@@ -2,6 +2,7 @@ package com.hgokumus.cryptoapp.crpyto.cryptoList.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +10,7 @@ import com.hgokumus.cryptoapp.R
 import com.hgokumus.cryptoapp.core.extensions.Constants.CRYPTO_PRICE_FORMAT
 import com.hgokumus.cryptoapp.core.extensions.formatChangeAndPrice
 import com.hgokumus.cryptoapp.core.extensions.formatNumber
+import com.hgokumus.cryptoapp.core.extensions.loadUrl
 import com.hgokumus.cryptoapp.core.extensions.orElse
 import com.hgokumus.cryptoapp.databinding.CryptoListItemBinding
 import com.hgokumus.cryptoapp.network.response.Crypto
@@ -41,6 +43,7 @@ class CryptoListAdapter(
                     cryptoListResponse.uuid?.let { uuid -> onRowClick.invoke(uuid) }
                 }
             }
+            cryptoImage.loadUrl(cryptoListResponse.iconUrl)
             cryptoAbbreviation.text = cryptoListResponse.symbol
             cryptoName.text = cryptoListResponse.name
             cryptoPrice.text = String.format(
@@ -54,6 +57,7 @@ class CryptoListAdapter(
                     cryptoListResponse.price?.toDouble().orElse { 0.0 }
                 )
             )
+            favoriteStarLogo.isVisible = cryptoListResponse.isFavorite
         }
     }
 }

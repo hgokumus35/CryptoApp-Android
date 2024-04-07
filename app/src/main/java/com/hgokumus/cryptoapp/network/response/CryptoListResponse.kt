@@ -24,5 +24,6 @@ data class Crypto(
     val name: String?,
     val iconUrl: String?,
     val price: String?,
-    val change: String?
+    val change: String?,
+    var isFavorite: Boolean = false
 ) : Parcelable

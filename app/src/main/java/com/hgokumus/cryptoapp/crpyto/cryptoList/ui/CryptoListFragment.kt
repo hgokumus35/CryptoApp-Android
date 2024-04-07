@@ -84,9 +84,15 @@ class CryptoListFragment : Fragment() {
             if (response is Resource.Error) {
                 println("ERROR")
             } else {
-                cryptoListAdapter.setItems(response?.data?.data?.coins)
-                cryptoListAdapter.notifyDataSetChanged()
+                response?.data?.data?.coins?.let { cryptoList ->
+                    cryptoListViewModel.getAllCryptoWithFavorites(cryptoList)
+                }
             }
+        }
+        cryptoListViewModel.getAllFavoritesEvent.observe(viewLifecycleOwner) {
+            println("Data: $it")
+            cryptoListAdapter.setItems(it)
+            cryptoListAdapter.notifyDataSetChanged()
         }
     }
 

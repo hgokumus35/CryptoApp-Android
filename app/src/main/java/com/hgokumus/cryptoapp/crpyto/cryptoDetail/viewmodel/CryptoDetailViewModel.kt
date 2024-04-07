@@ -10,6 +10,7 @@ import com.hgokumus.cryptoapp.core.utils.Resource
 import com.hgokumus.cryptoapp.crpyto.cryptoDetail.repository.CryptoDetailRepository
 import com.hgokumus.cryptoapp.network.request.CryptoDetailRequest
 import com.hgokumus.cryptoapp.network.request.PriceHistoryRequest
+import com.hgokumus.cryptoapp.network.response.CryptoDetail
 import com.hgokumus.cryptoapp.network.response.CryptoDetailResponse
 import com.hgokumus.cryptoapp.network.response.History
 import com.hgokumus.cryptoapp.network.response.PriceHistoryResponse
@@ -33,6 +34,7 @@ class CryptoDetailViewModel(
     val removeFromFavoritesEvent: LiveData<Boolean> = _removeFromFavoritesEvent
 
     var cryptoDetailUIVisibility = MutableLiveData(false)
+    var cryptoDetail: CryptoDetail? = null
 
     fun setCryptoDetailUIVisibility(visibility: Boolean) {
         cryptoDetailUIVisibility.value = visibility
