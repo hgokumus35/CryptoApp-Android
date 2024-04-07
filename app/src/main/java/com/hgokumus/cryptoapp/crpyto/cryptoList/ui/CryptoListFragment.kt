@@ -29,10 +29,10 @@ class CryptoListFragment : Fragment() {
     private val cryptoListViewModel by inject<CryptoListViewModel>()
     private val cryptoListAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CryptoListAdapter(
-            onRowClick = { uuid ->
+            onRowClick = { uuid, id, isFavorite ->
                 navigateToFragment(
                     requireActivity(),
-                    CryptoDetailFragment.newInstance(uuid),
+                    CryptoDetailFragment.newInstance(uuid, id, isFavorite),
                     R.id.homeContainer,
                     CRYPTO_LIST_FRAGMENT_TAG
                 )
@@ -75,7 +75,6 @@ class CryptoListFragment : Fragment() {
             ) {
                 cryptoListViewModel.getCryptoList(cryptoListViewModel.filterTypes[position])
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
@@ -85,10 +84,14 @@ class CryptoListFragment : Fragment() {
             if (response is Resource.Error) {
                 println("ERROR")
             } else {
-                binding.cryptoListRecyclerView.smoothScrollToPosition(0)
-                cryptoListAdapter.setItems(response?.data?.data?.coins)
-                cryptoListAdapter.notifyDataSetChanged()
+                response?.data?.data?.coins?.let { cryptoList ->
+                    cryptoListViewModel.getAllCryptoWithFavorites(cryptoList)
+                }
             }
+        }
+        cryptoListViewModel.getAllFavoritesEvent.observe(viewLifecycleOwner) {
+            cryptoListAdapter.setItems(it)
+            cryptoListAdapter.notifyDataSetChanged()
         }
     }
 

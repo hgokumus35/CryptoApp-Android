@@ -1,8 +1,12 @@
 package com.hgokumus.cryptoapp.home.di
 
+import androidx.room.Room
 import com.hgokumus.cryptoapp.network.service.CryptoService
+import com.hgokumus.cryptoapp.room.CryptoDatabase
+import com.hgokumus.cryptoapp.room.dao.CryptoDao
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -20,6 +24,12 @@ class HomeDI {
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                 retrofit.create(CryptoService::class.java)
+            }
+            single {
+                Room.databaseBuilder(
+                    androidContext(),
+                    CryptoDatabase::class.java, "CryptoDatabase"
+                ).allowMainThreadQueries().build()
             }
         }
     }

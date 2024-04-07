@@ -6,6 +6,17 @@
     <string name="crypto_price">$%s</string>
     <string name="crypto_change_rate">%s</string>
     <string name="crypto_detail_current_price_text">CURRENT PRICE</string>
+    <string name="crypto_detail_rank">Rank: %d</string>
     <string name="crypto_detail_daily_high_price">High: %s</string>
     <string name="crypto_detail_daily_low_price">Low: %s</string>
+
+    // Dialog Texts
+    <string name="crypto_dialog_success_title">SUCCESS</string>
+    <string name="crypto_dialog_error_title">ERROR</string>
+    <string name="crypto_add_to_favorites_success_dialog_message">Successfully added to favorites.</string>
+    <string name="crypto_add_to_favorites_error_dialog_message">An error occurred while adding to favorites. Please try again.</string>
+    <string name="crypto_remove_from_favorites_success_dialog_message">Successfully removed from favorites.</string>
+    <string name="crypto_remove_from_favorites_error_dialog_message">An error occurred while removing from favorites. Please try again.</string>
+    <string name="crypto_detail_add_favorites_button_text">FAVORİLERE EKLE</string>
+    <string name="crypto_detail_remove_from_favorites_button_text">FAVORİLERİMDEN KALDIR</string>
 </resources>
