@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.mikephil.charting.data.Entry
+import com.hgokumus.cryptoapp.core.extensions.Constants.ZERO_FLOAT
 import com.hgokumus.cryptoapp.core.extensions.orElse
 import com.hgokumus.cryptoapp.core.utils.Resource
 import com.hgokumus.cryptoapp.crpyto.cryptoDetail.repository.CryptoDetailRepository
@@ -36,6 +37,7 @@ class CryptoDetailViewModel(
     var cryptoDetailUIVisibility = MutableLiveData(false)
     var addRemoveButtonVisibility = MutableLiveData(false)
     var cryptoDetail: CryptoDetail? = null
+    var timestamps: MutableList<Long> = mutableListOf()
 
     fun setCryptoDetailUIVisibility(visibility: Boolean) {
         cryptoDetailUIVisibility.value = visibility
@@ -75,9 +77,11 @@ class CryptoDetailViewModel(
 
     fun cryptoChartUIModel(priceHistoryList: List<History>) : MutableList<Entry> {
         val chartEntries = mutableListOf<Entry>()
-        var x = 1f
-        priceHistoryList.forEach { history ->
-            history.price?.toFloat()?.let { price ->
+        var x = ZERO_FLOAT
+        priceHistoryList.reversed().forEach { history ->
+            history.timestamp?.let { timestamp ->
+                timestamps.add(timestamp)
+                val price = history.price?.toFloat().orElse { return@forEach }
                 chartEntries.add(Entry(x++, price))
             }
         }

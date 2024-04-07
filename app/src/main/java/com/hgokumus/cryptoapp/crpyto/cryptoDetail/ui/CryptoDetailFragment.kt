@@ -11,10 +11,13 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.hgokumus.cryptoapp.R
 import com.hgokumus.cryptoapp.core.extensions.*
 import com.hgokumus.cryptoapp.core.extensions.Constants.CRYPTO_PRICE_FORMAT
 import com.hgokumus.cryptoapp.core.extensions.Constants.EMPTY_STR
+import com.hgokumus.cryptoapp.core.extensions.Constants.TWO_FLOAT
+import com.hgokumus.cryptoapp.core.extensions.Constants.ZERO_DOUBLE
 import com.hgokumus.cryptoapp.core.extensions.Constants.ZERO_INT
 import com.hgokumus.cryptoapp.core.utils.Resource
 import com.hgokumus.cryptoapp.core.utils.viewBinding
@@ -94,7 +97,7 @@ class CryptoDetailFragment : Fragment() {
         }
         cryptoDetailViewModel.getCryptoDetailEvent.observe(viewLifecycleOwner) { resource ->
             when (resource) {
-                is Resource.Error -> println("ERROR")
+                is Resource.Error -> context?.showErrorDialog(R.string.crypto_dialog_error_message) { activity?.onBackPressed() }
                 is Resource.Success -> {
                     resource.data?.data?.coin?.let {
                         initializeUI(it)
@@ -107,7 +110,7 @@ class CryptoDetailFragment : Fragment() {
         }
         cryptoDetailViewModel.getPriceHistoryEvent.observe(viewLifecycleOwner) { resource ->
             when (resource) {
-                is Resource.Error -> println("ERROR")
+                is Resource.Error -> context?.showErrorDialog(R.string.crypto_dialog_error_message) { activity?.onBackPressed() }
                 is Resource.Success -> resource.data?.data?.let { initCryptoChart(it) }
                 else -> Unit
             }
@@ -130,50 +133,65 @@ class CryptoDetailFragment : Fragment() {
         }
     }
 
-    private fun initializeUI(cryptoDetail: CryptoDetail) {
-        with(binding) {
-            appbar.cryptoAbbreviationDetail.text = cryptoDetail.symbol
-            appbar.cryptoNameDetail.text = cryptoDetail.name
-            priceLayout.cryptoRank.text = String.format(
-                requireContext().getString(R.string.crypto_detail_rank),
-                cryptoDetail.rank
-            )
-            priceLayout.cryptoPrice.text = String.format(
-                requireContext().getString(R.string.crypto_price),
-                cryptoDetail.price?.formatNumber(CRYPTO_PRICE_FORMAT)
-            )
-            priceLayout.changeRate.text = String.format(
-                requireContext().getString(R.string.crypto_change_rate),
-                formatChangeAndPrice(
-                    cryptoDetail.change?.toDouble().orElse { 0.0 },
-                    cryptoDetail.price?.toDouble().orElse { 0.0 }
-                )
-            )
-            priceLayout.dailyHighPrice.text = String.format(
-                requireContext().getString(R.string.crypto_detail_daily_high_price),
-                cryptoDetail.sparkline?.maxOfOrNull { it.toDouble() }.toString().formatNumber(CRYPTO_PRICE_FORMAT)
-            )
-            priceLayout.dailyLowPrice.text = String.format(
-                requireContext().getString(R.string.crypto_detail_daily_low_price),
-                cryptoDetail.sparkline?.minOfOrNull { it.toDouble() }.toString().formatNumber(CRYPTO_PRICE_FORMAT)
-            )
-            cryptoDetailViewModel.setAddRemoveButtonVisibility(isFavorite)
+    private fun initializeUI(cryptoDetail: CryptoDetail) = with(binding) {
+        initAppBar(cryptoDetail)
+        initPriceLayout(cryptoDetail)
+        cryptoDetailViewModel.setAddRemoveButtonVisibility(isFavorite)
+    }
+
+    private fun initAppBar(cryptoDetail: CryptoDetail) = with(binding.appbar) {
+        cryptoAbbreviationDetail.text = cryptoDetail.symbol
+        cryptoNameDetail.text = cryptoDetail.name
+        favoriteStarLogoDetail.visibility = when(isFavorite) {
+            true -> View.VISIBLE
+            false -> View.INVISIBLE
         }
     }
 
     private fun initCryptoChart(priceHistory: PriceHistory) {
-        val chartDataSet = LineDataSet(cryptoDetailViewModel.cryptoChartUIModel(priceHistory.history), "")
+        val chartDataSet = LineDataSet(cryptoDetailViewModel.cryptoChartUIModel(priceHistory.history), EMPTY_STR)
         chartDataSet.color = Color.MAGENTA
-        chartDataSet.lineWidth = 2f
+        chartDataSet.lineWidth = TWO_FLOAT
 
         val lineData = LineData(chartDataSet)
         with(binding.cryptoChart) {
             data = lineData
+            animateX(1500)
+            setTouchEnabled(true)
+            setPinchZoom(true)
             description.isEnabled = false
             xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.valueFormatter = IndexAxisValueFormatter(timestampToDateString(cryptoDetailViewModel.timestamps))
             axisLeft.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART)
             axisRight.isEnabled = false
             invalidate()
         }
+    }
+
+    private fun initPriceLayout(cryptoDetail: CryptoDetail) = with(binding.priceLayout) {
+        cryptoRank.text = String.format(requireContext().getString(R.string.crypto_detail_rank), cryptoDetail.rank)
+        cryptoPrice.text = String.format(requireContext().getString(R.string.crypto_price), cryptoDetail.price?.formatNumber(CRYPTO_PRICE_FORMAT))
+        changeRate.text = String.format(
+            requireContext().getString(R.string.crypto_change_rate),
+            formatChangeAndPrice(
+                cryptoDetail.change?.toDouble().orElse { ZERO_DOUBLE },
+                cryptoDetail.price?.toDouble().orElse { ZERO_DOUBLE }
+            )
+        )
+        changeRate.setTextColor(
+            when {
+                cryptoDetail.change?.toDouble().orElse { ZERO_DOUBLE } > ZERO_DOUBLE -> Color.GREEN
+                cryptoDetail.change?.toDouble().orElse { ZERO_DOUBLE } < ZERO_DOUBLE -> Color.RED
+                else -> Color.BLACK
+            }
+        )
+        dailyHighPrice.text = String.format(
+            requireContext().getString(R.string.crypto_detail_daily_high_price),
+            cryptoDetail.sparkline?.maxOfOrNull { it.toDouble().orElse { ZERO_DOUBLE } }.toString().formatNumber(CRYPTO_PRICE_FORMAT)
+        )
+        dailyLowPrice.text = String.format(
+            requireContext().getString(R.string.crypto_detail_daily_low_price),
+            cryptoDetail.sparkline?.minOfOrNull { it.toDouble().orElse { ZERO_DOUBLE } }.toString().formatNumber(CRYPTO_PRICE_FORMAT)
+        )
     }
 }

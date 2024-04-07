@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hgokumus.cryptoapp.R
 import com.hgokumus.cryptoapp.core.extensions.Constants.FIFTEEN_INT
+import com.hgokumus.cryptoapp.core.extensions.Constants.FIVE_INT
 import com.hgokumus.cryptoapp.core.extensions.navigateToFragment
+import com.hgokumus.cryptoapp.core.extensions.showErrorDialog
 import com.hgokumus.cryptoapp.core.utils.Resource
 import com.hgokumus.cryptoapp.core.utils.viewBinding
 import com.hgokumus.cryptoapp.crpyto.cryptoDetail.ui.CryptoDetailFragment
@@ -66,7 +68,7 @@ class CryptoListFragment : Fragment() {
             addOnScrollListener(object : PagingScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    if (shouldPaginate) {
+                    if (shouldPaginate && cryptoListViewModel.currentPage <= FIVE_INT) {
                         cryptoListViewModel.getCryptoList(offset = cryptoListViewModel.currentPage.times(FIFTEEN_INT))
                         isScrolling = false
                     }
@@ -93,7 +95,7 @@ class CryptoListFragment : Fragment() {
     private fun setObservers() {
         cryptoListViewModel.getCryptoListEvent.observe(viewLifecycleOwner) { response ->
             if (response is Resource.Error) {
-                println("ERROR")
+                context?.showErrorDialog(R.string.crypto_dialog_error_message) { cryptoListViewModel.getCryptoList() }
             } else {
                 response?.data?.data?.coins?.let { cryptoList ->
                     cryptoListViewModel.getAllCryptoWithFavorites(cryptoList.toList())
@@ -102,8 +104,7 @@ class CryptoListFragment : Fragment() {
         }
         cryptoListViewModel.getAllFavoritesEvent.observe(viewLifecycleOwner) {
             cryptoListAdapter.setItems(it)
-            val totalPages = 5
-            pagingScrollListener?.isLastPage = cryptoListViewModel.currentPage == totalPages
+            pagingScrollListener?.isLastPage = cryptoListViewModel.currentPage == FIVE_INT
         }
     }
 

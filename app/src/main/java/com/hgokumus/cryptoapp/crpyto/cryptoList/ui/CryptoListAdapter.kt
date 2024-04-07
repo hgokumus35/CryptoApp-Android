@@ -1,5 +1,6 @@
 package com.hgokumus.cryptoapp.crpyto.cryptoList.ui
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hgokumus.cryptoapp.R
 import com.hgokumus.cryptoapp.core.extensions.Constants.CRYPTO_PRICE_FORMAT
+import com.hgokumus.cryptoapp.core.extensions.Constants.ZERO_DOUBLE
 import com.hgokumus.cryptoapp.core.extensions.formatChangeAndPrice
 import com.hgokumus.cryptoapp.core.extensions.formatNumber
 import com.hgokumus.cryptoapp.core.extensions.loadUrl
@@ -55,9 +57,16 @@ class CryptoListAdapter(
             cryptoChangeRate.text = String.format(
                 itemView.context.getString(R.string.crypto_change_rate),
                 formatChangeAndPrice(
-                    cryptoListResponse.change?.toDouble().orElse { 0.0 },
-                    cryptoListResponse.price?.toDouble().orElse { 0.0 }
+                    cryptoListResponse.change?.toDouble().orElse { ZERO_DOUBLE },
+                    cryptoListResponse.price?.toDouble().orElse { ZERO_DOUBLE }
                 )
+            )
+            cryptoChangeRate.setTextColor(
+                when {
+                    cryptoListResponse.change?.toDouble().orElse { ZERO_DOUBLE } > ZERO_DOUBLE -> Color.GREEN
+                    cryptoListResponse.change?.toDouble().orElse { ZERO_DOUBLE } < ZERO_DOUBLE -> Color.RED
+                    else -> Color.BLACK
+                }
             )
             favoriteStarLogo.isVisible = cryptoListResponse.isFavorite
         }
