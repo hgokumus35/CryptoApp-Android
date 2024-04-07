@@ -1,5 +1,6 @@
 package com.hgokumus.cryptoapp.crpyto.cryptoList.ui
 
+import PagingScrollListener
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hgokumus.cryptoapp.R
+import com.hgokumus.cryptoapp.core.extensions.Constants.FIFTEEN_INT
 import com.hgokumus.cryptoapp.core.extensions.navigateToFragment
 import com.hgokumus.cryptoapp.core.utils.Resource
 import com.hgokumus.cryptoapp.core.utils.viewBinding
@@ -27,6 +29,7 @@ class CryptoListFragment : Fragment() {
 
     private val binding by viewBinding(FragmentCryptoListBinding::bind)
     private val cryptoListViewModel by inject<CryptoListViewModel>()
+    private var pagingScrollListener: PagingScrollListener? = null
     private val cryptoListAdapter by lazy(LazyThreadSafetyMode.NONE) {
         CryptoListAdapter(
             onRowClick = { uuid, id, isFavorite ->
@@ -50,7 +53,6 @@ class CryptoListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        cryptoListViewModel.getCryptoList()
         setAdapters()
         setObservers()
         setListeners()
@@ -61,6 +63,15 @@ class CryptoListFragment : Fragment() {
             adapter = cryptoListAdapter
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             itemAnimator = null
+            addOnScrollListener(object : PagingScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (shouldPaginate) {
+                        cryptoListViewModel.getCryptoList(offset = cryptoListViewModel.currentPage.times(FIFTEEN_INT))
+                        isScrolling = false
+                    }
+                }
+            })
         }
         setSpinnerAdapter()
     }
@@ -73,7 +84,7 @@ class CryptoListFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                cryptoListViewModel.getCryptoList(cryptoListViewModel.filterTypes[position])
+                cryptoListViewModel.getCryptoList(orderBy = cryptoListViewModel.filterTypes[position])
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
@@ -85,13 +96,14 @@ class CryptoListFragment : Fragment() {
                 println("ERROR")
             } else {
                 response?.data?.data?.coins?.let { cryptoList ->
-                    cryptoListViewModel.getAllCryptoWithFavorites(cryptoList)
+                    cryptoListViewModel.getAllCryptoWithFavorites(cryptoList.toList())
                 }
             }
         }
         cryptoListViewModel.getAllFavoritesEvent.observe(viewLifecycleOwner) {
             cryptoListAdapter.setItems(it)
-            cryptoListAdapter.notifyDataSetChanged()
+            val totalPages = 5
+            pagingScrollListener?.isLastPage = cryptoListViewModel.currentPage == totalPages
         }
     }
 

@@ -14,6 +14,8 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.hgokumus.cryptoapp.R
 import com.hgokumus.cryptoapp.core.extensions.*
 import com.hgokumus.cryptoapp.core.extensions.Constants.CRYPTO_PRICE_FORMAT
+import com.hgokumus.cryptoapp.core.extensions.Constants.EMPTY_STR
+import com.hgokumus.cryptoapp.core.extensions.Constants.ZERO_INT
 import com.hgokumus.cryptoapp.core.utils.Resource
 import com.hgokumus.cryptoapp.core.utils.viewBinding
 import com.hgokumus.cryptoapp.crpyto.cryptoDetail.viewmodel.CryptoDetailViewModel
@@ -35,8 +37,8 @@ class CryptoDetailFragment : Fragment() {
         }
     }
 
-    private var uuid: String = ""
-    private var id: Long = 0
+    private var uuid: String = EMPTY_STR
+    private var id: Long = ZERO_INT.toLong()
     private var isFavorite: Boolean = false
     private val binding by viewBinding(FragmentCryptoDetailBinding::bind)
     private val cryptoDetailViewModel by inject<CryptoDetailViewModel>()
